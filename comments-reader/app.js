@@ -5,7 +5,7 @@ const app = express();
 
 app.get('/comments', (req, res) => {
   // Make a GET request to the API endpoint
-  axios.get('http://api.juniortest-uchirai-govere.com/comments')
+  axios.get('https://localhost:3000/comments')
     .then(response => {
       // Handle the response
       const comments = response.data;
