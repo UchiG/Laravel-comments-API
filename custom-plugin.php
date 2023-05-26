@@ -21,12 +21,14 @@ function my_comments_plugin_save_comment($comment_id) {
 
     // Prepare the data to be sent to the API
     $data = array(
-        'name' => $comment->comment_author, // Change 'author' to 'name' to match the Laravel validation rule
-        'comment' => $comment->comment_content
+        'post_id' => $comment->comment_post_ID, // Add this line to send the post ID
+        'author_name' => $comment->comment_author, // Change 'author' to 'name' to match the Laravel validation rule
+        'author_email' => $comment->comment_author_email, // Change 'author_email' to 'email' to match the Laravel validation rule
+        'content' => $comment->comment_content
     );
 
     // Send the data to the API using cURL or any HTTP library of your choice
-    $api_url = 'https://api.juniortest-uchirai-govere.com/comments';
+    $api_url = 'https://api.juniortest-uchirai-govere.com/comments'; // try testing with https://api.juniortest-uchirai-govere.com/wp-json/wp/v2/comments?post=30
     $ch = curl_init($api_url);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
