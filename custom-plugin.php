@@ -21,29 +21,27 @@ function my_comments_plugin_save_comment($comment_id) {
 
     // Prepare the data to be sent to the API
     $data = array(
-        'author' => $comment->comment_author,
-        'email' => $comment->comment_author_email,
-        'content' => $comment->comment_content
+        'name' => $comment->comment_author, // Change 'author' to 'name' to match the Laravel validation rule
+        'comment' => $comment->comment_content
     );
 
-    // Convert data to JSON format
-    $json_data = json_encode($data);
-
     // Send the data to the API using cURL or any HTTP library of your choice
-    $api_url = 'https://api.juniortest-uchirai-govere.com/comments'; // Replace with your API endpoint URL
-    $response = wp_remote_post($api_url, array(
-        'body' => $json_data,
-        'headers' => array('Content-Type' => 'application/json')
-    ));
+    $api_url = 'https://api.juniortest-uchirai-govere.com/comments';
+    $ch = curl_init($api_url);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
 
     // Handle the API response if needed
-    if (is_wp_error($response)) {
+    if ($response === false) {
         // API request failed
-        error_log('API request failed: ' . $response->get_error_message());
+        error_log('API request failed: ' . curl_error($ch));
     } else {
         // API request succeeded
-        $response_code = wp_remote_retrieve_response_code($response);
-        if ($response_code === 200) {
+        $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($response_code === 201) {
             // Comment saved successfully to the API
             error_log('Comment saved to the API: ' . $comment_id);
         } else {

@@ -5,7 +5,7 @@ const app = express();
 
 app.get('/comments', (req, res) => {
   // Make a GET request to the API endpoint
-  axios.get('https://localhost:3000/comments')
+  axios.get(`${process.env.APP_URL}/comments`)
     .then(response => {
       // Handle the response
       const comments = response.data;
