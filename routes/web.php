@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CommentController;
+
+Route::post('/comments', [CommentController::class, 'store']);
+Route::get('/comments', [CommentController::class, 'index']);
 
 /*
 |--------------------------------------------------------------------------
